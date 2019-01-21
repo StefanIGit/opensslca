@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>OpenSSL CA</title>
+
+	</head>
+<style>
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+/* Set textarea size*/
+textarea {
+    width: 600px;
+    height: 400px;
+
+}
+
+
+</style>
+
+<script type="text/javascript">
+function updateValue(evt, id, amount) {
+    evt.preventDefault();
+    var currentValue, newValue;
+    currentValue = parseInt(document.getElementById(id).value) + parseInt(amount);
+    newValue = currentValue.toString();
+    document.getElementById(id).value = newValue;
+}
+
+function SelectAll(id)
+{
+    document.getElementById(id).focus();
+    document.getElementById(id).select();
+    document.execCommand('copy');
+}
+
+
+function showTab(evt, cityName) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+</script>
+
+
+
+	<body>
+        <div class="header">
+            <h3 class="text-muted">TestCenter CA, signing CSRs since 23.01.2018</h2>
+        </div>
+        <div class="tab">
+            <button class="tablinks" onclick="showTab(event, 'CA')"  id="CATAB">CA</button>
+            <button class="tablinks" onclick="showTab(event, 'CSR')" id="CSRTAB">CSR</button>
+            <button class="tablinks" onclick="showTab(event, 'CRT')" id="CRTTAB">CRT</button>
+            <button class="tablinks" onclick="showTab(event, 'DECODECRT')" id="DECRTTAB">Decode CRT</button>
+        </div>
+
+        <div id="CA" class="tabcontent">
+            <div>CA Cert:</div>
+            <!-- div><textarea cols="65" rows="23" name="CA"  >{{ caCert }}</textarea> </div -->
+            <div><textarea class="bla"  name="CA"  >{{ caCert }}</textarea> </div>
+        </div>
+
+        <div id="CSR" class="tabcontent">
+            <div>CSR goes here: </div>
+            <form method="post">
+                <div> <textarea  name="CSR"  >{{ CSR }}</textarea> </div>
+                <div> 
+                    Valid from: <input type="text" name="validfrom" id="validfrom" value="-86400"/>
+                    <button class="tablinks" onclick="updateValue(event, 'validfrom', -86400)" >-1 Day</button>
+                    <button class="tablinks" onclick="updateValue(event, 'validfrom', 86400)" >+1 Day</button>
+                </div>
+                <div> 
+                    Valid until: <input type="text" name="validuntil" id="validuntil"  value="86400"/>
+                    <button class="tablinks" onclick="updateValue(event, 'validuntil', -86400)" >-1 Day</button>
+                    <button class="tablinks" onclick="updateValue(event, 'validuntil', 86400)" >+1 Day</button>
+
+                </div>
+                <div> (seconds)</div>
+                <button>Sign</button>
+            </form>
+        </div>
+
+        <div id="CRT" class="tabcontent">
+            <div>
+                Signed Cert:
+                <button onClick="SelectAll('cert')" >Copy to Clipboard</button>
+            </div>
+            <div><textarea  name="cert" id="cert" >{{ cert }}</textarea> </div>
+        </div>
+
+
+        <div id="DECODECRT" class="tabcontent">
+            <div>Decode CRT: </div>
+            <form method="post">
+                <div> <textarea  name="crttodecode"  >{{ crttodecode }}</textarea> </div>
+                <button>Decode</button>
+            </form>
+        </div>
+
+	</body>
+</html>
+
+<script>
+document.getElementById("{{TabToLoad}}").click();
+</script>
+								
+

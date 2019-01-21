@@ -1,0 +1,13 @@
+[Unit]
+Description=Persistent Transactions API
+After=syslog.target network.target electrum.service
+
+[Service]
+User=www-data
+#Group=root
+Type=simple
+ExecStart=/usr/bin/python /var/www/opensslCa/opensslCA.py
+#Restart=always
+
+[Install]
+WantedBy=multi-user.target
